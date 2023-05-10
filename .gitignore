@@ -1,2 +1,4 @@
-dev.code-workspace
+node_modules
+.env
+*.rar
 /*.png
