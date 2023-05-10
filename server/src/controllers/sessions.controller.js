@@ -90,11 +90,8 @@ const registerUser = async (req, res) => {
 const getSimpleUser = async (req, res) => {
    try {
       const simpleUser = {
-         id: req.user.id,
          firstname: req.user.firstname,
-         lastname: req.user.lastname,
          avatar: req.user.avatar,
-         email: req.user.email
       }
       res.status(200).send(simpleUser)
    }

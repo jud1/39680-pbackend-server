@@ -2,7 +2,7 @@ import { useRef } from "react"
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setUser } from '../../store.js'
-import fetchCookie from "../../utils/fetchCookie.js"
+import { fetchCookie } from '../../utils/useCookies.js'
 
 const Login = () => {
 

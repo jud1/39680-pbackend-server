@@ -1,48 +1,47 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate, NavLink } from "react-router-dom"
-// REDUX
-import { selectUser } from '../../store.js'
-import { useDispatch, useSelector } from 'react-redux'
-import { setUser, clearUser } from '../../store.js'
+import { Link, NavLink } from "react-router-dom"
+import { useSelector, useDispatch } from 'react-redux'
+import { selectUser, setUser, clearUser } from '../../store.js'
+import { getSessionCookie, fetchCookie } from '../../utils/useCookies.js'
+
+import Logout from '../Logout/Logout.jsx'
 import Logo from '../Logo/Logo'
-import Cookies from 'js-cookie'
 import Menu from './Menu'
 import './menu.min.css'
 
 
 const Navbar = () => {
 
-   // Hook Resize to mb
-   const [mbsize] = useState(959)
-   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-   const handleResize = () => {
-      setWindowWidth(window.innerWidth)
-   }
-   useEffect(() => {
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
-   }, [])
-   useEffect(() => {
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
-   }, [])
-
-   // Data from REDUX
-   const user = useSelector(selectUser)
+   const [isLoggedIn, setIsLoggedIn] = useState(false)
+   
+   const cookie = getSessionCookie()
    const dispatch = useDispatch()
-
-   // Misc
-   const navigate = useNavigate() // [TODO]: Part of fix redux, render, more below
+   const user = useSelector(selectUser)
    const activeClassName = "uk-text-warning"
-   const cookieName = import.meta.env.VITE_COOKIE_SESSION_NAME
-   const jwtCookie = Cookies.get(cookieName)
+   console.log(user)
+   
+   useEffect(() => {
 
-   // REDUX
-   const handleLogout = () => {
-      dispatch(clearUser())
-      Cookies.remove(cookieName)
-      navigate('/')
-   }
+      if(cookie && user.data !== null) {}
+      
+      else if (cookie) {
+         const getData = async () => {
+            try {
+               const data = await fetchCookie()
+               dispatch(setUser(data))
+            } 
+            catch (error) { 
+               dispatch(clearUser())
+               /* console.error(error) // too much information */ 
+            }
+         }
+         getData()
+      }
+
+      else dispatch(clearUser())
+      
+      setIsLoggedIn(true)
+   }, [])
 
    return (
       <nav className="uk-navbar-container">
@@ -80,7 +79,7 @@ const Navbar = () => {
                                  </li>
                                  <li className="uk-flex uk-flex-middle">
                                     <span className="uk-margin-small-right" data-uk-icon="sign-out"></span>
-                                    <a href="#" onClick={handleLogout}>Logout</a>
+                                    <Logout>Logout</Logout>
                                  </li>
                               </ul>
                            </div>
@@ -92,30 +91,14 @@ const Navbar = () => {
 
                {/* RIGHT Navbar */}
                <div className="uk-navbar-right">
-                  { jwtCookie && user.id !== null
+                  { user.data !== null
                      ? <NavLink to={`/cart`} className={({ isActive }) => isActive ? activeClassName : undefined}>
                         <span data-uk-icon="icon: cart"></span>
                         <span>Cart</span>
                      </NavLink>
                      : false
                   }
-
-                  { windowWidth > mbsize 
-                     ? <Menu/>
-                     : <>
-                        {/* Show MB Button */}
-                           <button className='uk-button uk-button-secondary' uk-toggle="target: #my-id" type="button">
-                              <span data-uk-icon="icon: menu"></span>
-                           </button>
-                        {/* Render MB Offcanvas Menu */}
-                        <div id="my-id" data-uk-offcanvas="">
-                           <div className="uk-offcanvas-bar">
-                              <button className="uk-offcanvas-close" type="button" data-uk-close=""></button>
-                              <Menu/>
-                           </div>
-                        </div>
-                     </>
-                  }
+                  <Menu/>
                </div>
             </div>
          </div>
@@ -123,4 +106,4 @@ const Navbar = () => {
    )
 }
 
-export default Navbar;
+export default Navbar
