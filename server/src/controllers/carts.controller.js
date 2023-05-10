@@ -1,4 +1,4 @@
-import { createCart, findCart, findCarts, addProduct, removeProduct, emptyCart } from '../services/cartsServices.js'
+import { createCart, findCart, findCarts, addProduct, removeProduct, emptyCart } from '../services/carts.services.js'
 
 const postCart = async (req, res) => {
    try {

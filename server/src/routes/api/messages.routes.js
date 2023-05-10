@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { current } from '../../utils/authorization.js'
-import { getMessages, postMessage } from '../../controllers/messages.js'
+import { getMessages, postMessage } from '../../controllers/messages.controller.js'
 
 const routerMessages = Router()
 

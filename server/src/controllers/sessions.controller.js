@@ -1,4 +1,4 @@
-import { createUser, findUserByEmail } from "../services/usersServices.js"
+import { createUser, findUserByEmail } from "../services/users.services.js"
 import passport from "passport"
 import jwt from "jsonwebtoken"
 import { validatePassword, createHash } from "../utils/bcrypt.js"

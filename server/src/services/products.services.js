@@ -1,5 +1,5 @@
 // Dinamic import (DAO)
-const path = process.env.SELECTEDBD === '1' ? '../models/mongodb/productsModel.js' : '../models/sequelize/productsModel.js'
+const path = process.env.SELECTEDBD === '1' ? '../models/mongodb/products.model.js' : '../models/sequelize/products.model.js'
 
 const importedModule = await import(path)
 const productsModel = importedModule.default

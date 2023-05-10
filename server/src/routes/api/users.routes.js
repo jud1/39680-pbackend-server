@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { current, authorizationRole }from '../../utils/authorization.js'
-import { getUsers, getUserById } from '../../controllers/user.js'
+import { getUsers, getUserById } from '../../controllers/users.controller.js'
 
 const routerUsers = Router()
 

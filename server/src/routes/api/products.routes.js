@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { current, authorizationRole } from '../../utils/authorization.js'
-import { getProducts, getPaginatedProducts, getProduct, postProduct, deleteProduct, updateProduct } from '../../controllers/products.js'
+import { getProducts, getPaginatedProducts, getProduct, postProduct, deleteProduct, updateProduct } from '../../controllers/products.controller.js'
 
 const routerProducts = Router()
 

@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { current, authorizationRole } from '../../utils/authorization.js'
 
-import { postCart, getCartById, getMyCart, getAllCarts, putProductOnCart, addProductOnCart, removeProductCart, deleteProductFromCart, deleteAllProductsFromCart } from '../../controllers/carts.js'
+import { postCart, getCartById, getMyCart, getAllCarts, putProductOnCart, addProductOnCart, removeProductCart, deleteProductFromCart, deleteAllProductsFromCart } from '../../controllers/carts.controller.js'
 
 const routerCarts = Router()
 

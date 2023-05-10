@@ -1,10 +1,10 @@
 // Dinamic import (DAO)
-const path = process.env.SELECTEDBD === '1' ? '../models/mongodb/usersModel.js' : '../models/sequelize/usersModel.js'
+const path = process.env.SELECTEDBD === '1' ? '../models/mongodb/users.model.js' : '../models/sequelize/users.model.js'
 
 const importedModule = await import(path)
 const usersModel = importedModule.default
 
-import { createCart } from './cartsServices.js'
+import { createCart } from './carts.services.js'
 
 // Get all
 const findUsers = async () => {

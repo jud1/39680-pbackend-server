@@ -1,4 +1,4 @@
-import { createMessage, findMessages } from "../services/messagesServices.js"
+import { createMessage, findMessages } from "../services/messages.services.js"
 
 const getMessages = async(req, res) => {
    try {

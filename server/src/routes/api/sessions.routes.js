@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { registerUser, loginUser, getSimpleUser } from '../../controllers/session.js'
+import { registerUser, loginUser, getSimpleUser } from '../../controllers/sessions.controller.js'
 import { current } from '../../utils/authorization.js'
 
 const routerSessions = Router()

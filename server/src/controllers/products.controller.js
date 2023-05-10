@@ -1,4 +1,4 @@
-import { findProducts, findPaginatedProducts, findProduct, createProduct, removeProduct, modifyProduct } from '../services/productsServices.js'
+import { findProducts, findPaginatedProducts, findProduct, createProduct, removeProduct, modifyProduct } from '../services/products.services.js'
 
 const getProducts = async(req, res) => {
    try {

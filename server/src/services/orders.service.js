@@ -1,5 +1,5 @@
-import { findCart, emptyCart } from "./cartsServices.js"
-import { modifyProduct } from "./productsServices.js"
+import { findCart, emptyCart } from "./carts.services.js"
+import { modifyProduct } from "./products.services.js"
 import nodemailer from 'nodemailer'
 
 // Dinamic import (DAO)
