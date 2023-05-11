@@ -16,7 +16,7 @@ const getCartById = async (req, res) => {
       res.status(200).send(cart)
    }
    catch (error) {
-      res.status(500).send('Error creating cart', error)
+      res.status(404).send('Error getting cart', error)
    }
 }
 
@@ -26,7 +26,7 @@ const getMyCart = async (req, res) => {
       res.status(200).send(cart)
    }
    catch (error) {
-      res.status(500).send('Error creating cart', error)
+      res.status(404).send('Error getting my cart', error)
    }
 }
 
@@ -36,7 +36,7 @@ const getAllCarts = async (req, res) => {
       res.status(200).send(carts)
    }
    catch (error) {
-      res.status(500).send('Error creating cart', error)
+      res.status(403).send('Error getting all cart', error)
    }
 }
 
@@ -46,7 +46,7 @@ const putProductOnCart = async (req, res) => {
       res.status(200).send(updatedCart)
    }
    catch (error) {
-      res.status(500).send('Error creating cart', error)
+      res.status(404).send('Error on modify cart', error)
    }
 }
 
@@ -57,7 +57,7 @@ const addProductOnCart = async (req, res) => {
       res.status(200).send(updatedCart)
    }
    catch (error) {
-      res.status(500).send(error)
+      res.status(404).send(error)
    }
 }
 
@@ -70,7 +70,7 @@ const removeProductCart = async (req, res) => {
       res.status(200).send(updatedCart)
    }
    catch (error) {
-      res.status(500).send('Error creating cart')
+      res.status(404).send('Error on remove product from cart')
    }
 }
 
@@ -80,7 +80,7 @@ const deleteProductFromCart = async (req, res) => {
       res.status(200).send(updatedCart)
    }
    catch (error) {
-      res.status(500).send('Error creating cart', error)
+      res.status(404).send('Error on delete a product from cart', error)
    }
 }
 
@@ -90,7 +90,7 @@ const deleteAllProductsFromCart = async (req, res) => {
       res.status(200).send(updatedCart)
    }
    catch (error) {
-      res.status(500).send('Error creating cart', error)
+      res.status(404).send('Error on empty a cart', error)
    }
 }
 

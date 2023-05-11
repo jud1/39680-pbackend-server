@@ -3,11 +3,21 @@ import passport from "passport"
 import jwt from "jsonwebtoken"
 import { validatePassword, createHash } from "../utils/bcrypt.js"
 
+import CustomError from '../helpers/errors/CustomError.js'
+import EErrors from '../helpers/errors/enums.js'
+import { generateUserErrorInfo, userAlreadyRegisteredErrorInfo } from '../helpers/errors/info.js'
+
 const loginUser = async (req, res, next) => {
    try {
       passport.authenticate('jwt', { session: false }, async (error, user, info) => {
          if (error) {
-            return res.status(401).send("Error on token")
+            CustomError.createError({
+               name: 'Error',
+               cause: 'Error on authentication on login',
+               message: generateUserErrorInfo({ firstname, lastname, email }),
+               code: EErrors.AUTH_LOGIN_ERROR
+            })
+            // return res.status(401).send("Error on token")
          }
 
          // Token does not exist, so I validate the user
@@ -51,7 +61,7 @@ const loginUser = async (req, res, next) => {
       })(req, res, next)
    }
    catch (error) {
-      res.status(500).send(`Error on session, ${error}`)
+      res.status(error.code).send(error.message)
    }
 }
 
@@ -60,8 +70,22 @@ const registerUser = async (req, res) => {
       const { firstname, lastname, email, password } = req.body
       const userBDD = await findUserByEmail(email)
 
+      if (!firstname || !lastname || !email || !password) {
+         CustomError.createError({
+            name: 'Error',
+            cause: 'Invalid data',
+            message: generateUserErrorInfo({ firstname, lastname, email }),
+            code: EErrors.INVALID_TYPES_ERROR
+         })
+      }
+
       if (userBDD) {
-         res.status(401).send("User already registered")
+         CustomError.createError({
+            name: 'Error',
+            cause: 'Existing email in database',
+            message: userAlreadyRegisteredErrorInfo({ email }),
+            code: EErrors.ALREADY_REGISTERED_ERROR
+         })
       } 
       else {
          const hashPassword = createHash(password)
@@ -81,8 +105,9 @@ const registerUser = async (req, res) => {
       }
 
 
-   } catch (error) {
-      res.status(500).send(`Error on register user, ${error}`)
+   } 
+   catch (error) {
+      res.status(error.code).send(error.message)
    }
 
 }
@@ -96,10 +121,11 @@ const getSimpleUser = async (req, res) => {
       res.status(200).send(simpleUser)
    }
    catch (error) {
-      res.status(500).send('Error creating cart', error)
+      res.status(500).send('Error getting data', error)
    }
 }
 
+// UNUSED
 const logoutUser = (req, res) => {
    try {
      // Obtengo el token desde la cookie
@@ -107,18 +133,18 @@ const logoutUser = (req, res) => {
  
      // Si no hay token, envío un error 401
      if (!token) {
-       return res.status(401).send("No se encontró el token")
+       return res.status(401).send("Token not found")
      }
  
      // Elimino la cookie del token
      res.clearCookie("jwt")
  
      // Envío una respuesta exitosa
-     return res.status(200).send("Logout exitoso")
+     return res.status(200).send("Logout success")
    } 
    catch (error) {
      // Si ocurre algún error, envío un error 500 con el mensaje del error
-     res.status(500).send(`Error en el logout: ${error}`)
+     res.status(500).send(`Error on logout: ${error}`)
    }
 }
 

@@ -1,4 +1,4 @@
-import { findProducts, findPaginatedProducts, findProduct, createProduct, removeProduct, modifyProduct } from '../services/products.services.js'
+import { findProducts, findPaginatedProducts, findProduct, createProduct, removeProduct, modifyProduct, findMocksProducts } from '../services/products.services.js'
 
 const getProducts = async(req, res) => {
    try {
@@ -6,7 +6,7 @@ const getProducts = async(req, res) => {
       res.status(200).send(products)
    }
    catch(error) {
-      res.status(500).send('Error getting product', error)
+      res.status(500).send('Error getting products', error)
    }
 }
 
@@ -61,5 +61,15 @@ const updateProduct = async(req, res) => {
    }
 }
 
+const getMocksProducts = (req, res) => {
+   try {
+      const products = findMocksProducts()
+      res.status(200).send(products)
+   }
+   catch(error) {
+      res.status(500).send('Error getting products', error)
+   }
+}
 
-export { getProducts, getPaginatedProducts, getProduct, postProduct, deleteProduct, updateProduct}
+
+export { getProducts, getPaginatedProducts, getProduct, postProduct, deleteProduct, updateProduct, getMocksProducts}
