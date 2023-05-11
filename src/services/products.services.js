@@ -79,7 +79,6 @@ const modifyProduct = async (id, product) => {
 const findMocksProducts = () => {
    try {
       const products = []
-   
       const createRandomProduct = () => {
          return {
             id: faker.datatype.uuid(),
@@ -92,7 +91,6 @@ const findMocksProducts = () => {
             category: faker.commerce.department() 
          }
       }
-   
       Array.from({ length: 100 }).forEach( () => {
          products.push(createRandomProduct())
       })

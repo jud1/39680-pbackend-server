@@ -10,6 +10,5 @@ routerProducts.get('/:id', getProduct)
 routerProducts.post('/', current('jwt'), authorizationRole('admin'), postProduct)
 routerProducts.delete('/:id', current('jwt'), authorizationRole('admin'), deleteProduct)
 routerProducts.put('/:id', current('jwt'), authorizationRole('admin'), updateProduct)
-routerProducts.get('/mocksproducts/:quantity', getMocksProducts)
 
 export default routerProducts

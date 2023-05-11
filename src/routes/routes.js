@@ -15,4 +15,8 @@ router.use('/api/carts', routerCarts)
 router.use('/api/messages', routerMessages)
 router.use('/api/orders', routerOrders)
 
+// MOCKS
+import { getMocksProducts } from "../controllers/products.controller.js"
+router.get('/mocksproducts/', getMocksProducts)
+
 export default router
