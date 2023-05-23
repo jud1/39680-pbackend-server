@@ -5,6 +5,7 @@ import routerSessions from "./api/sessions.routes.js"
 import routerCarts from "./api/carts.routes.js"
 import routerMessages from "./api/messages.routes.js"
 import routerOrders from "./api/order.routes.js"
+import routerTest from "./api/test.routes.js"
 
 const router = Router()
 
@@ -14,9 +15,9 @@ router.use('/api/sessions', routerSessions)
 router.use('/api/carts', routerCarts)
 router.use('/api/messages', routerMessages)
 router.use('/api/orders', routerOrders)
+router.use('/api/test', routerTest)
 
 // MOCKS
-import { getMocksProducts } from "../controllers/products.controller.js"
-router.get('/mocksproducts/', getMocksProducts)
+
 
 export default router

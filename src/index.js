@@ -7,6 +7,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import passport from 'passport'
 import initializePassport from './config/passport/passport.js'
+import { addLogger } from './utils/logger.js'
 
 // Define express app
 const app = express()
@@ -33,6 +34,9 @@ app.use(cookieParser(process.env.JWT_SECRET,  {
 // Define passport
 app.use(passport.initialize())
 initializePassport(passport)
+
+// Logger
+app.use(addLogger)
 
 // User router
 app.use('/', router)

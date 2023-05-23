@@ -18,7 +18,6 @@ const createOrder = async (user) => {
       /* const productsWithError = cart.products.filter(item => item.product.stock < item.quantity)
       if (productsWithError.length > 0) {
          // Exit and not create order
-         console.log(productsWithError)
          throw new Error('Not stock')
       } */
 
@@ -59,8 +58,6 @@ const createOrder = async (user) => {
       const neworder = new ordersModel(order)
       await neworder.save()
       
-      console.log(process.env.NOEMAILONTEST)
-
       // IF var on env is not 1, send email (for dev purposes)
       if(process.env.NOEMAILONTEST !== '1') {
          

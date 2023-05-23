@@ -64,6 +64,7 @@ const updateProduct = async(req, res) => {
 const getMocksProducts = (req, res) => {
    try {
       const products = findMocksProducts()
+      req.logger.debug(`Created a ${products.length} mocks products`)
       res.status(200).send(products)
    }
    catch(error) {

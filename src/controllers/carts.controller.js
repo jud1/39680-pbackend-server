@@ -63,10 +63,7 @@ const addProductOnCart = async (req, res) => {
 
 const removeProductCart = async (req, res) => {
    try {
-      console.log(req.user.id_cart)
-      console.log(req.body.pid)
       const updatedCart = await removeProduct(req.user.id_cart, req.body.pid)
-      console.log(updatedCart)
       res.status(200).send(updatedCart)
    }
    catch (error) {
