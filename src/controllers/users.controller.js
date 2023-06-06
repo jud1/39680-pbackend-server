@@ -1,4 +1,4 @@
-import { findUsers, findUserById, findUserByEmail } from "../services/users.services.js";
+import { findUsers, findUserById } from "../services/users.services.js";
 
 const getUsers = async (req, res) => {
     try {
@@ -20,4 +20,15 @@ const getUserById = async (req, res) => {
     }
 }
 
-export { getUsers, getUserById }
+const changeRole = async (req, res) => {
+    try {
+        const user = await findUserById(req.params.uid)
+        user.role === 'user' ? user.role = 'premium' : user.role = 'user'
+        await user.save()
+        res.status(200).send(user)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
+export { getUsers, getUserById, changeRole }

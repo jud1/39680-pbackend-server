@@ -1,6 +1,8 @@
-import { createUser, findUserByEmail } from "../services/users.services.js"
+import { createUser, findUserByEmail, generateCodeResetPassword, updatePassword } from "../services/users.services.js"
 import passport from "passport"
 import jwt from "jsonwebtoken"
+import shortid from "shortid"
+import nodemailer from 'nodemailer'
 import { validatePassword, createHash } from "../utils/bcrypt.js"
 
 import CustomError from '../helpers/errors/CustomError.js'
@@ -148,4 +150,72 @@ const logoutUser = (req, res) => {
    }
 }
 
-export { loginUser, registerUser, getSimpleUser, logoutUser }
+const resetPassword = async(req, res) => {
+   try {
+      const email = req.body.email
+      const token = shortid.generate() 
+      await generateCodeResetPassword(email, token)
+
+      // Nodemailer: options
+      const transporter = nodemailer.createTransport({
+         service: 'gmail',
+         port: 587,
+         auth: {
+            user: process.env.GMAILSENDERUSER,
+            pass: process.env.GMAILSENDERPASS
+         }
+      })
+
+      // Nodemailer: send
+      await transporter.sendMail({
+         from: process.env.GMAILSENDERUSER,
+         to: email,
+         subject: 'Reset password',
+         html: `
+            <h1>Your code to reset the password is:</h1>
+            <p>${token}</p>
+         `
+      })
+      
+      return res.status(200).send('Token sent')
+   }
+   catch (error) {
+      res.status(500).send(error)
+   }
+}
+
+const setNewPassword = async(req, res) => {
+   try {
+      const email = req.body.email
+      const token = req.body.token
+      const newPassword = req.body.newPassword
+
+      if(!email || !token || !newPassword) {
+         return res.status(400).send('Invalid data')
+      }
+
+      const userBDD = await findUserByEmail(email)
+      
+      if(!userBDD) {
+         return res.status(400).send('User not found')
+      }
+
+      if(userBDD.reset_token.token !== token) {
+         return res.status(401).send('Invalid token')
+      }
+
+      if(userBDD.reset_token.expiration < Date.now()) {
+         return res.status(401).send('Token expired')
+      }
+
+      const hashPassword = createHash(newPassword)
+      await updatePassword(email, hashPassword)
+      
+      return res.status(200).send('The password has been updated successfully')
+   }
+   catch (error) {
+      res.status(500).send(error)
+   }
+}
+
+export { loginUser, registerUser, getSimpleUser, logoutUser, resetPassword, setNewPassword }

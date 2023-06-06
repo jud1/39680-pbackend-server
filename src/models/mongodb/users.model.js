@@ -37,7 +37,7 @@ const usersSchema = new Schema({
    role: {
       type: String, 
       default: "user", 
-      enum: ["user", "admin"]
+      enum: ["user", "admin", "premium"]
    },
    phone: {
       type: String,
@@ -47,6 +47,16 @@ const usersSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "Carts",
       required: true
+   },
+   reset_token: {
+      token: {
+         type: String,
+         default: null
+      },
+      expiration: { 
+         type: Date,
+         default: null
+      }
    }
 })
 

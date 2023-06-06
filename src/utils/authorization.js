@@ -1,5 +1,6 @@
 import passport from "passport"
 import { findOrder } from "../services/orders.service.js"
+import { findProduct } from "../services/products.services.js"
 
 // General function to return error in to strategy of passport
 const current = strategy => {
@@ -57,4 +58,66 @@ const authUserOnGetOrder = (strategy) => {
    }
 }
 
-export { current, authorizationRole, authUserOnGetOrder }
+const authOnCreateProduct = (strategy) => {
+   return async (req, res, next) => {
+      passport.authenticate(strategy, async (error, user, info) => {
+         
+         if(!user){
+            const errorMsg = info && info.messages ? info.messages : 'Unauthorized'
+            return res.status(401).json({ error: errorMsg })
+         }
+         
+         if(user.role !== 'admin' && user.role !== 'premium') {
+            return res.status(403).send({error: 'User not authorized'})
+         }
+         req.user = user
+         next()
+      }) (req, res, next)
+   }
+}
+
+const authOnModifyProduct = (strategy) => {
+   return async (req, res, next) => {
+      passport.authenticate(strategy, async (error, user, info) => {
+         
+         const product = await findProduct(req.params.id)
+
+         if(!user){
+            const errorMsg = info && info.messages ? info.messages : 'Unauthorized'
+            return res.status(401).json({ error: errorMsg })
+         }
+         
+         if(user.role !== 'admin' && user.role !== 'premium') {
+            return res.status(403).send({error: 'User not authorized'})
+         }
+
+         if(user.role === 'premium' && user.id !== product.owner.toString()) {
+            return res.status(403).send({error: 'User not authorized'})
+         }
+
+         req.user = user
+         next()
+      }) (req, res, next)
+   }
+}
+
+const noAddYourProduct = (strategy) => {
+   return async (req, res, next) => {
+      passport.authenticate(strategy, async (error, user, info) => {
+         
+         const product = await findProduct(req.body.pid)
+
+         const productOwner = product.owner.toString()
+         const userId = user.id
+
+         if(productOwner === userId) {
+            return res.status(403).send({error: 'User cant add his own product'})
+         }
+         
+         req.user = user
+         next()
+      }) (req, res, next)
+   }
+}
+
+export { current, authorizationRole, authUserOnGetOrder, authOnCreateProduct, authOnModifyProduct, noAddYourProduct }

@@ -55,4 +55,37 @@ const createUser = async (user) => {
    }
 }
 
-export { findUsers, findUserById, findUserByEmail, createUser }
+const generateCodeResetPassword = async (email, token) => {
+   try {
+      const updates = { 
+         reset_token: {
+            token: token, 
+            expiration: Date.now() + 3600000
+         }
+      }
+      const user = await usersModel.updateOne({ email: email }, { $set: updates })
+      return user
+   }
+   catch (error) {
+      return error
+   }
+}
+
+const updatePassword = async (email, password) => {
+   try {
+      const updates = {
+         password: password,
+         reset_token: {
+            token: null, 
+            expiration: null
+         }
+      }
+      const user = await usersModel.updateOne({ email: email }, { $set: updates })
+      return user
+   }
+   catch (error) {
+      return error
+   }
+}
+
+export { findUsers, findUserById, findUserByEmail, createUser, generateCodeResetPassword, updatePassword }

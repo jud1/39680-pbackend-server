@@ -33,7 +33,7 @@ const getProduct = async(req, res) => {
 const postProduct = async(req, res) => {
    try {
       const { name, description, sku, price, stock } = req.body
-      const newProduct = await createProduct({ name, description, sku, price, stock })
+      const newProduct = await createProduct({ name, description, sku, price, stock, owner: req.user.id })
       res.status(200).send(newProduct)
    }
    catch(error) {
