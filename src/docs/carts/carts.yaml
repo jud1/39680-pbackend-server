@@ -1,0 +1,136 @@
+paths:
+   /api/carts/:
+      get:
+         summary: "Get all carts (Auth required)"
+         tags:
+            - Carts
+         responses:
+            200:
+               description: "OK"
+            401:
+               description: "Unauthorized"
+            500:
+               description: "Error getting all cart"
+      post:
+         summary: "Post a cart (not allowed, auto generated)"
+         tags:
+            - Carts
+         responses:
+            200:
+               description: "OK"
+            401:
+               description: "Unauthorized"
+            500:
+               description: "Error creating cart"
+   /api/carts/cart/:id/:
+      get:
+         summary: "Get a cart by id (Auth required)"
+         tags:
+            - Carts
+         responses:
+            200:
+               description: "OK"
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/Carts"
+            401:
+               description: "Unauthorized"
+            500:
+               description: "Error getting cart"
+   /api/carts/mycart/:
+      get:
+         summary: "Get the actual user cart (Session required)"
+         tags:
+            - Carts
+         responses:
+            200:
+               description: "OK"
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/Carts"
+            401:
+               description: "Unauthorized"
+            500:
+               description: "Error getting user cart"
+   /api/carts/addproduct/:
+      put:
+         summary: "Add product to the actual user cart (Session required)"
+         tags:
+            - Carts
+         responses:
+            200:
+               description: "OK"
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/Carts"
+            401:
+               description: "Unauthorized"
+            500:
+               description: "Error on adding a product to the cart"
+   /api/carts/removeproduct/:
+      delete:
+         summary: "Remove product to the actual user cart (Session required)"
+         tags:
+            - Carts
+         responses:
+            200:
+               description: "OK"
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/Carts"
+            401:
+               description: "Unauthorized"
+            500:
+               description: "Error on delete a product from cart"
+   /api/carts/:id/:
+      put:
+         summary: "Empty cart (Session required)"
+         tryItOutEnabled: false
+         tags:
+            - Carts
+         responses:
+            200:
+               description: "OK"
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/Carts"
+            401:
+               description: "Unauthorized"
+            500:
+               description: "Error on empty a cart"
+components:
+   schemas:
+      Carts:
+         type: object
+         properties:
+            _id:
+               type: ObjectId
+               description: "Id of the cart"
+            products:
+               type: array
+               description: "Products of the cart"
+               items:
+                  type: object
+                  properties:
+                     _id:
+                        type: ObjectId
+                        description: "Id of the product"
+                     quantity:
+                        type: number
+                        description: "Quantity of the product"
+         example:
+            _id: ObjectId('64555e83b9cc04fb62fb28a7')
+            products:
+               -  _id: ObjectId('644be77fa839c7c99b9529fb')
+                  quantity: 3
+               -  _id: ObjectId('644be7ada839c7c99b9529fd')
+                  quantity: 1
+               -  _id: ObjectId('644be7c3a839c7c99b952a01')
+                  quantity: 10
+               -  _id: ObjectId('644be7b9a839c7c99b9529ff')
+                  quantity: 6

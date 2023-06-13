@@ -26,7 +26,7 @@ const getMyCart = async (req, res) => {
       res.status(200).send(cart)
    }
    catch (error) {
-      res.status(404).send('Error getting my cart', error)
+      res.status(404).send('Error getting user cart', error)
    }
 }
 
@@ -52,13 +52,12 @@ const putProductOnCart = async (req, res) => {
 
 const addProductOnCart = async (req, res) => {
    try {
-      /* const updatedCart = await addProduct(req.user.id_cart, req.body.pid)
+      const updatedCart = await addProduct(req.user.id_cart, req.body.pid)
       if(updatedCart.name === 'Error') throw new Error(updatedCart.message)
-      res.status(200).send(updatedCart) */
-      res.status(200).send('ok')
+      res.status(200).send(updatedCart)
    }
    catch (error) {
-      res.status(404).send(error)
+      res.status(404).send('Error on adding a product to the cart', error)
    }
 }
 

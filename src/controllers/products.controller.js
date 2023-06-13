@@ -16,7 +16,7 @@ const getPaginatedProducts = async(req, res) => {
       res.status(200).send(product)
    }
    catch(error) {
-      res.status(500).send('Error getting product', error)
+      res.status(500).send('Error getting paginated product', error)
    }
 }
 
@@ -26,7 +26,7 @@ const getProduct = async(req, res) => {
       res.status(200).send(product)
    }
    catch(error) {
-      res.status(500).send('Error getting product', error)
+      res.status(500).send('Error getting a specifict product', error)
    }
 }
 
@@ -68,7 +68,7 @@ const getMocksProducts = (req, res) => {
       res.status(200).send(products)
    }
    catch(error) {
-      res.status(500).send('Error getting products', error)
+      res.status(500).send('Error getting mocks products', error)
    }
 }
 
