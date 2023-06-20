@@ -19,6 +19,16 @@ const createCart = async () => {
    }
 }
 
+const deleteCart = async (id) => {
+   try {
+      const cart = await cartsModel.findByIdAndDelete(id)
+      return cart
+   }
+   catch (error) {
+      return error
+   }
+}
+
 const findCart = async (id, isPopulate=true) => {
    try {
       const cart = await cartsModel.findById(id)
@@ -111,4 +121,4 @@ const emptyCart = async id => {
 }
 
 
-export { createCart, findCart, findCarts, addProduct, removeProduct, emptyCart }
+export { createCart, deleteCart, findCart, findCarts, addProduct, removeProduct, emptyCart }

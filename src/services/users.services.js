@@ -55,6 +55,15 @@ const createUser = async (user) => {
    }
 }
 
+const deleteUser = async (id) => {
+   try {
+      const user = await usersModel.findByIdAndDelete(id)
+      return user
+   } catch (error) {
+      return error
+   }
+}
+
 const generateCodeResetPassword = async (email, token) => {
    try {
       const updates = { 
@@ -88,4 +97,4 @@ const updatePassword = async (email, password) => {
    }
 }
 
-export { findUsers, findUserById, findUserByEmail, createUser, generateCodeResetPassword, updatePassword }
+export { findUsers, findUserById, findUserByEmail, createUser, deleteUser, generateCodeResetPassword, updatePassword }
