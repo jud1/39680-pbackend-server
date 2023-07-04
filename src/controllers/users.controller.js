@@ -33,7 +33,7 @@ const changeRole = async (req, res) => {
 
 const putDocument = async(req, res) => {
     try {
-        const upload = await uploadDocument(req.user.id, { name: req.body.name, reference: req.body.link })
+        const upload = await uploadDocument(req.user.id, { name: req.body.name, reference: req.file.path})
         res.status(200).send(upload)
     }
 
