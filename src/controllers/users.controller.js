@@ -1,4 +1,4 @@
-import { findUsers, findUserById } from "../services/users.services.js";
+import { findUsers, findUserById, uploadDocument } from "../services/users.services.js";
 
 const getUsers = async (req, res) => {
     try {
@@ -31,4 +31,15 @@ const changeRole = async (req, res) => {
     }
 }
 
-export { getUsers, getUserById, changeRole }
+const putDocument = async(req, res) => {
+    try {
+        const upload = await uploadDocument(req.user.id, { name: req.body.name, reference: req.body.link })
+        res.status(200).send(upload)
+    }
+
+    catch (error) {
+        res.status(500).send(error)
+    }
+}
+
+export { getUsers, getUserById, changeRole, putDocument }

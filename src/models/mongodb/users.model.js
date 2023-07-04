@@ -57,6 +57,25 @@ const usersSchema = new Schema({
          type: Date,
          default: null
       }
+   },
+   documents: {
+      type: [
+         {
+            name: {
+               type: String,
+               required: true
+            },
+            reference: { 
+               type: String,
+               required: true
+            }
+         }
+      ],
+      default: []
+   },
+   last_connection: {
+      type: Date,
+      default: Date.now()
    }
 })
 

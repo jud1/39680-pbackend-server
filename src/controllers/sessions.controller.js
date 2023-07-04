@@ -1,9 +1,10 @@
-import { createUser, findUserByEmail, generateCodeResetPassword, updatePassword } from "../services/users.services.js"
+import { createUser, findUserByEmail, findUserById, generateCodeResetPassword, updatePassword } from "../services/users.services.js"
 import passport from "passport"
 import jwt from "jsonwebtoken"
 import shortid from "shortid"
 import nodemailer from 'nodemailer'
 import { validatePassword, createHash } from "../utils/bcrypt.js"
+import { setLastConnection } from "../services/users.services.js"
 
 import CustomError from '../helpers/errors/CustomError.js'
 import EErrors from '../helpers/errors/enums.js'
@@ -42,19 +43,29 @@ const loginUser = async (req, res, next) => {
                { httpOnly: true, secure: false, signed: true, expires: new Date(Date.now() + 3600000) }
             )
 
+            // Set Last connection
+            await setLastConnection(userBDD.email)
+
             return res.status(200).json({ token })
 
          }
+
          // Token exist, so i validate the token
          else {
-            const token = req.cookies.jwt;
-            jwt.verify(token, process.env.JWT_SECRET, async (error, decodedToken) => {
+            // const token = req.cookies.jwt; // error: undefined
+            const token2 = req.signedCookies.jwt
+            jwt.verify(token2, process.env.JWT_SECRET, async (error, decodedToken) => {
                if (error) {
                   // Token no valido
                   return res.status(401).send("Not valid credentials")
                } else {
                   // Token valido
                   req.user = user
+                  
+                  // Set Last connection
+                  await setLastConnection(req.user.email)
+
+                  console.log(req.user)
                   return res.status(200).send("Valid credentials")
                }
             })
@@ -91,7 +102,7 @@ const registerUser = async (req, res) => {
       } 
       else {
          const hashPassword = createHash(password)
-         const newUser = await createUser({ firstname, lastname, email, password: hashPassword })
+         const newUser = await createUser({ firstname, lastname, email, password: hashPassword})
 
          const token = jwt.sign(
             { user: { id: newUser._id } }, 
@@ -127,26 +138,34 @@ const getSimpleUser = async (req, res) => {
    }
 }
 
-// UNUSED
-const logoutUser = (req, res) => {
+const logoutUser = async (req, res) => {
    try {
-     // Obtengo el token desde la cookie
-     const token = req.signedCookies.jwt
+      // Obtengo el token desde la cookie
+      const token = req.signedCookies.jwt
+
+      // Si no hay token, envío un error 401
+      if (!token) {
+         return res.status(401).send("Token not found")
+      }
+      
+      // get the user from the token
+      const user = jwt.verify(token, process.env.JWT_SECRET)
+      const userId = user.user.id
+      const userBBDD = await findUserById(userId)
+
+      
+      // Elimino la cookie del token
+      res.clearCookie("jwt")
+      
+      // Set Last connection
+      await setLastConnection(userBBDD.email)
  
-     // Si no hay token, envío un error 401
-     if (!token) {
-       return res.status(401).send("Token not found")
-     }
- 
-     // Elimino la cookie del token
-     res.clearCookie("jwt")
- 
-     // Envío una respuesta exitosa
-     return res.status(200).send("Logout success")
+      // Envío una respuesta exitosa
+      return res.status(200).send("Logout success")
    } 
    catch (error) {
-     // Si ocurre algún error, envío un error 500 con el mensaje del error
-     res.status(500).send(`Error on logout: ${error}`)
+      // Si ocurre algún error, envío un error 500 con el mensaje del error
+      res.status(500).send(`Error on logout: ${error}`)
    }
 }
 

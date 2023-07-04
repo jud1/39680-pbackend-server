@@ -97,4 +97,36 @@ const updatePassword = async (email, password) => {
    }
 }
 
-export { findUsers, findUserById, findUserByEmail, createUser, deleteUser, generateCodeResetPassword, updatePassword }
+const setLastConnection = async (email) => {
+   try {
+      const updates = {
+         last_connection: Date.now()
+      }
+      const user = await usersModel.updateOne({ email: email }, { $set: updates })
+      return user
+   }
+   catch (error) {
+      return error
+   }
+}
+
+const uploadDocument = async (id, document) => {
+   try {
+      const user = await usersModel.findById(id)
+      /* const documents = user.documents
+      documents.push(document) */
+
+      // Need to modify the user on adding to property documents a new element (documents is an array)
+      const updatedUser = await usersModel.findByIdAndUpdate(id,
+         { $push: {documents: document} },
+         { new: true }
+      )
+
+      return updatedUser
+   }
+   catch (error) {
+      return error
+   }
+}
+
+export { findUsers, findUserById, findUserByEmail, createUser, deleteUser, generateCodeResetPassword, updatePassword, setLastConnection, uploadDocument }
