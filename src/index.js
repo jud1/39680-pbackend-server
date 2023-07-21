@@ -15,7 +15,7 @@ import { addLogger } from './utils/logger.js'
 
 // Define express app
 const app = express()
-app.set('port', process.env.PORT || 8080)
+app.set('port', process.env.PORT || 8000)
 
 // Define middleware for parsing JSON and urlencoded data
 app.use(express.json())
@@ -23,17 +23,10 @@ app.use(express.json())
 // Connect to MongoDB from external file
 connectDB()
 
-app.use(cors({ 
-   origin: process.env.CORS_ORIGIN.split(','),
-   /* credentials: true */
-}))
+app.use(cors({ origin: process.env.CORS_ORIGIN.split(',')/* , credentials: true  */}))
 
 // Define cookie parser
-app.use(cookieParser(process.env.JWT_SECRET,  {
-   /* httpOnly: true,
-   secure: false,
-   signed: true */
-}))
+app.use(cookieParser(process.env.JWT_SECRET, /* {httpOnly: true, secure: false, signed: true} */ ))
 
 // Define passport
 app.use(passport.initialize())

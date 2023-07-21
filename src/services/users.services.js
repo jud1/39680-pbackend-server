@@ -4,7 +4,7 @@ const path = process.env.SELECTEDBD === '1' ? '../models/mongodb/users.model.js'
 const importedModule = await import(path)
 const usersModel = importedModule.default
 
-import { createCart } from './carts.services.js'
+import { createCart, deleteCart } from './carts.services.js'
 
 // Get all
 const findUsers = async () => {
@@ -58,6 +58,8 @@ const createUser = async (user) => {
 const deleteUser = async (id) => {
    try {
       const user = await usersModel.findByIdAndDelete(id)
+      // Delete cart
+      await deleteCart(user.id_cart)
       return user
    } catch (error) {
       return error

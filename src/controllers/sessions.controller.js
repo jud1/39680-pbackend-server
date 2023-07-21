@@ -39,9 +39,12 @@ const loginUser = async (req, res, next) => {
             )
             
             // I send the token to the client
-            res.cookie('jwt', token, 
-               { httpOnly: true, secure: false, signed: true, expires: new Date(Date.now() + 3600000) }
-            )
+            res.cookie('jwt', token, { 
+               httpOnly: true, 
+               secure: false, 
+               signed: true, 
+               expires: new Date(Date.now() + 60 * 60 * 1000 * Number(process.env.JWT_EXPIRES_IN_HOURS)) 
+            })
 
             // Set Last connection
             await setLastConnection(userBDD.email)

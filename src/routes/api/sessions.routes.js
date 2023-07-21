@@ -7,7 +7,7 @@ const routerSessions = Router()
 routerSessions.post('/register', registerUser)
 routerSessions.post('/login', loginUser)
 routerSessions.post('/logout', logoutUser)
-routerSessions.get('/usersimple', current('jwt'), getSimpleUser)
+routerSessions.get('/current', current('jwt'), getSimpleUser)
 routerSessions.post('/reset-password', resetPassword)
 routerSessions.post('/set-new-password', setNewPassword)
 
