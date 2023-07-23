@@ -5,16 +5,13 @@ const productsSchema = new Schema({
    name: {
       type: String,
       require: true,
-      max: 60 
    },
    description: {
       type: String,
       require: true,
-      max: 200 
    },
    sku: {
       type: String,
-      max: 20,
       require: true,
       unique: true
    },
@@ -32,7 +29,6 @@ const productsSchema = new Schema({
    },
    category: {
       type: String,
-      max: 20,
       default: 'default'
    },
    owner: {

@@ -4,8 +4,7 @@ import { getProducts, getPaginatedProducts, getProduct, postProduct, deleteProdu
 
 const routerProducts = Router()
 
-routerProducts.get('/', getProducts)
-routerProducts.get('/paginated/', getPaginatedProducts)
+routerProducts.get('/', getPaginatedProducts)
 routerProducts.get('/:id', getProduct)
 routerProducts.post('/', current('jwt'), authOnCreateProduct('jwt'), postProduct)
 routerProducts.delete('/:id', current('jwt'), authOnModifyProduct('jwt'), deleteProduct)

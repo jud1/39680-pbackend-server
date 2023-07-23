@@ -120,5 +120,58 @@ const emptyCart = async id => {
    }
 }
 
+const modifyQuantity = async (cid, pid, quantity) => {
+   try {
+      
+      //* Sets
+      const product = await productsModel.findById(pid)
+      const name = product.name
+      const cart = await cartsModel.findById(cid)
+      
+      //! Errors
+      if (typeof quantity !== 'number' || quantity % 1 !== 0 || quantity < 0) throw new Error(`Quantity of product ${name} must be a not decimal positive number`)
+      
+      if (quantity > product.stock) throw new Error(`Cant add more than ${product.stock} units of product ${name}`)
 
-export { createCart, deleteCart, findCart, findCarts, addProduct, removeProduct, emptyCart }
+      if (quantity === 0 && cart.products.every(item => item.product.toString() !== pid)) throw new Error(`Cant remove the product because ${name} is not in the cart`)
+
+      //* Actions
+      if (cart.products.every(item => item.product.toString() !== pid)) {
+         cart.products.push({ product: pid, quantity: quantity })
+      }
+
+      else if (quantity === 0) {
+         cart.products = cart.products.filter(item => item.product.toString() !== pid)
+      } 
+      
+      else if (quantity >= 1 && quantity <= product.stock) {
+         cart.products.map(item => item.product.toString() === pid ? item.quantity = quantity : false)
+      }
+     
+      //* Updates
+      await cartsModel.findByIdAndUpdate(cart, cart)
+
+      //* Response
+      const updateCart = cart.products.find(item => item.product.toString() === pid)
+      return quantity === 0 ? `Product ${name} removed from cart` : `Product ${name} quantity updated to ${updateCart.quantity}`
+   }
+   catch (error) {
+      return error.message
+   }
+}
+
+const modifyProducts = async (cid, update) => {
+   try {
+      const responses = await Promise.all(update.map(async item => {
+         return await modifyQuantity(cid, item.product, item.quantity)
+      }))
+
+      return responses
+   }
+   catch (error) {
+      return error
+   }
+}
+
+
+export { createCart, deleteCart, findCart, findCarts, addProduct, removeProduct, emptyCart, modifyQuantity, modifyProducts }

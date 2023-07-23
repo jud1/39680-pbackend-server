@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose'
+import mongoosePaginate from "mongoose-paginate-v2"
 import shortid from 'shortid'
 
 const initialStatus = 'created'
@@ -58,6 +59,8 @@ const ordersSchema = new Schema({
       default: []
    }
 })
+
+ordersSchema.plugin(mongoosePaginate)
 
 const ordersModel = model('Orders', ordersSchema)
 

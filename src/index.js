@@ -26,7 +26,7 @@ connectDB()
 app.use(cors({ origin: process.env.CORS_ORIGIN.split(',')/* , credentials: true  */}))
 
 // Define cookie parser
-app.use(cookieParser(process.env.JWT_SECRET, /* {httpOnly: true, secure: false, signed: true} */ ))
+app.use(cookieParser(process.env.JWT_SECRET, {httpOnly: true, secure: false, signed: true} ))
 
 // Define passport
 app.use(passport.initialize())

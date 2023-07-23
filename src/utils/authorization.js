@@ -105,17 +105,23 @@ const noAddYourProduct = (strategy) => {
    return async (req, res, next) => {
       passport.authenticate(strategy, async (error, user, info) => {
          
-         const product = await findProduct(req.body.pid)
+         try {
+            const product = await findProduct(req.params.id)
+            
+            const productOwner = product.owner.toString()
+            const userId = user.id
 
-         const productOwner = product.owner.toString()
-         const userId = user.id
+            if(productOwner === userId) {
+               return res.status(403).send({error: 'User cant add his own product'})
+            }
 
-         if(productOwner === userId) {
-            return res.status(403).send({error: 'User cant add his own product'})
+            req.user = user
+            next()
+         }
+         catch (error) {
+            return res.status(404).send({error: 'Product not found'})
          }
          
-         req.user = user
-         next()
       }) (req, res, next)
    }
 }

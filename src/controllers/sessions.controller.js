@@ -162,6 +162,10 @@ const logoutUser = async (req, res) => {
       
       // Set Last connection
       await setLastConnection(userBBDD.email)
+
+      // remove the autorization from the header
+      req.headers.authorization = null
+
  
       // Envío una respuesta exitosa
       return res.status(200).send("Logout success")

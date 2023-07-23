@@ -1,4 +1,5 @@
-import { createCart, findCart, findCarts, addProduct, removeProduct, emptyCart } from '../services/carts.services.js'
+import { response } from 'express'
+import { createCart, findCart, findCarts, addProduct, removeProduct, emptyCart, modifyProducts, modifyQuantity } from '../services/carts.services.js'
 
 const postCart = async (req, res) => {
    try {
@@ -40,21 +41,11 @@ const getAllCarts = async (req, res) => {
    }
 }
 
-const putProductOnCart = async (req, res) => {
-   try {
-      const updatedCart = await addProduct(req.params.id, req.params.pid)
-      res.status(200).send(updatedCart)
-   }
-   catch (error) {
-      res.status(404).send('Error on modify cart', error)
-   }
-}
-
 const addProductOnCart = async (req, res) => {
    try {
-      const updatedCart = await addProduct(req.user.id_cart, req.body.pid)
+      const updatedCart = await addProduct(req.user.id_cart, req.params.id)
       if(updatedCart.name === 'Error') throw new Error(updatedCart.message)
-      res.status(200).send(updatedCart)
+      res.status(200).send(updatedCart.products)
    }
    catch (error) {
       res.status(404).send('Error on adding a product to the cart', error)
@@ -63,32 +54,48 @@ const addProductOnCart = async (req, res) => {
 
 const removeProductCart = async (req, res) => {
    try {
-      const updatedCart = await removeProduct(req.user.id_cart, req.body.pid)
-      res.status(200).send(updatedCart)
+      await removeProduct(req.user.id_cart, req.params.id)
+      res.status(200).send(`Product ${req.params.id} removed from your cart`)
    }
    catch (error) {
       res.status(404).send('Error on remove product from cart')
    }
 }
 
-const deleteProductFromCart = async (req, res) => {
-   try {
-      const updatedCart = await removeProduct(req.params.id, req.params.pid)
-      res.status(200).send(updatedCart)
-   }
-   catch (error) {
-      res.status(404).send('Error on delete a product from cart', error)
-   }
-}
-
 const deleteAllProductsFromCart = async (req, res) => {
    try {
-      const updatedCart = await emptyCart(req.params.id)
-      res.status(200).send(updatedCart)
+      await emptyCart(req.user.id_cart)
+      res.status(200).send('Your cart is empty')
    }
    catch (error) {
       res.status(404).send('Error on empty a cart', error)
    }
 }
 
-export { postCart, getCartById, getMyCart, getAllCarts, putProductOnCart, addProductOnCart, deleteProductFromCart, removeProductCart, deleteAllProductsFromCart }
+const updateProduct = async (req, res) => {
+   try {
+      const cart = req.user.id_cart
+      const product = req.params.id
+      const quantity = req.body.quantity
+      const updatedCart = await modifyQuantity(cart, product, quantity)
+      res.status(200).send(updatedCart)
+   }
+   catch (error) {
+      res.status(500).send('Error on update product from cart')
+   }
+}
+
+const updateProducts = async (req, res) => {
+   try {
+      const cart = req.user.id_cart
+      const update = req.body
+      const updatedCart = await modifyProducts(cart, update)
+      res.status(200).send(updatedCart)
+   }
+   catch (error) {
+      res.status(500).send('Error on update products from cart')
+   }
+}
+
+
+export { postCart, getCartById, getMyCart, getAllCarts, addProductOnCart, removeProductCart, deleteAllProductsFromCart, updateProduct, updateProducts }

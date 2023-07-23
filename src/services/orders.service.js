@@ -14,7 +14,7 @@ const createOrder = async (user) => {
       const exceptions = []
       const cart = await findCart(user.id_cart.toString())
 
-      // Error on stock [A]: This method return an array with the products with insufficient stock, not being used yet, its more informative to the user but its no required by the homework
+      // Error on stock [A]: This method return an array with the products with insufficient stock, not being used yet, its more informative to the user but its no required by the proyect
       /* const productsWithError = cart.products.filter(item => item.product.stock < item.quantity)
       if (productsWithError.length > 0) {
          // Exit and not create order
@@ -58,17 +58,17 @@ const createOrder = async (user) => {
       const neworder = new ordersModel(order)
       await neworder.save()
       
+      // Update stock on products purchased
+      cart.products.forEach(async item => {
+         const newStock = item.product.stock - item.quantity
+         await modifyProduct(item.product.id, {stock: newStock})
+      })
+
+      // Empty cart
+      emptyCart(user.id_cart.toString())
+      
       // IF var on env is not 1, send email (for dev purposes)
       if(process.env.NOEMAILONTEST !== '1') {
-         
-         // Update stock on products purchased
-         cart.products.forEach(async item => {
-            const newStock = item.product.stock - item.quantity
-            await modifyProduct(item.product.id, {stock: newStock})
-         })
-
-         // Empty cart
-         emptyCart(user.id_cart.toString())
          
          // Nodemailer: options
          const transporter = nodemailer.createTransport({
@@ -113,6 +113,20 @@ const findOrder = async (id) => {
    }
 }
 
+const findAllOrders = async (queryParams) => {
+   let { limit, page, sort, ...query } = queryParams
+   !limit && (limit = 10)
+   !page && (page = 1)
+   sort = queryParams.sort ? [["date", queryParams.sort]] : null
+   try {
+      const orders = await ordersModel.paginate(query, {limit, page, sort})
+      return orders
+   }
+   catch (error) {
+      return error
+   }
+}
+
 const updateOrder = async (id, modify) => {
    try {
       const updateOrder = await ordersModel.findByIdAndUpdate(id, modify, { new: true })
@@ -125,4 +139,4 @@ const updateOrder = async (id, modify) => {
    }
 }
 
-export { createOrder, findOrder, updateOrder }
+export { createOrder, findOrder, findAllOrders, updateOrder }

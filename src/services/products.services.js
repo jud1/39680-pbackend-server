@@ -45,7 +45,6 @@ const findPaginatedProducts = async (queryParams) => {
    !limit && (limit = 10)
    !page && (page = 1)
    sort = queryParams.sort ? [["price", queryParams.sort]] : null
-
    try {
       const products = await productsModel.paginate(query, {limit, page, sort})
       return products
