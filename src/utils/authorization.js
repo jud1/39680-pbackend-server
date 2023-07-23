@@ -112,14 +112,14 @@ const noAddYourProduct = (strategy) => {
             const userId = user.id
 
             if(productOwner === userId) {
-               return res.status(403).send({error: 'User cant add his own product'})
+               return res.status(403).send({message: 'User cant add his own product'})
             }
 
             req.user = user
             next()
          }
          catch (error) {
-            return res.status(404).send({error: 'Product not found'})
+            return res.status(404).send({message: 'Product not found'})
          }
          
       }) (req, res, next)

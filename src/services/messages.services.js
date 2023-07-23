@@ -16,30 +16,19 @@ const createMessage = async (message) => {
    }
 }
 
-// Get all
-const findMessages = async () => {
+const findMessages = async (queryParams) => {
+   let { limit, page, sort, ...query } = queryParams
+   !limit && (limit = 10)
+   !page && (page = 1)
+   sort = queryParams.sort ? [["date", queryParams.sort]] : [["date", "desc"]]
+
    try {
-      const messages = await messagesModel.find()
+      const messages = await messagesModel.paginate(query, {limit, page, sort})
       return messages
    }
    catch(error) {
       return error
    }
 }
-
-/* const findPaginatedMessages = async (queryParams) => {
-   let { limit, page, sort, ...query } = queryParams
-   !limit && (limit = 10)
-   !page && (page = 1)
-   sort = queryParams.sort ? [["price", queryParams.sort]] : null
-
-   try {
-      const products = await productsModel.paginate(query, {limit, page, sort})
-      return products
-   }
-   catch(error) {
-      return error
-   }
-} */
 
 export { createMessage, findMessages }

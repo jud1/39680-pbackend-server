@@ -74,9 +74,12 @@ const addProduct = async (id, product) => {
       else cart.products.map(item => item.product.toString() === product ? item.quantity++ : false)
 
       // If the quantity amount overpass the stock
-      if ( ( cart.products.find(item => item.product.toString() === product) ).quantity > productLiteral.stock ) {
+      if ((cart.products.find(item => item.product.toString() === product) ).quantity > productLiteral.stock) {
          // EXIT RETURN [only IF]
-         throw new Error('The quantity amount overpass the stock')
+         throw new Error(JSON.stringify({ 
+            code: 404,
+            message: `Quantity exceeds maximum allowed: ${productLiteral.name}`,
+         }))
       }
       
       await cartsModel.findByIdAndUpdate(id, cart)

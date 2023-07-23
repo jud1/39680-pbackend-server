@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose'
+import mongoosePaginate from "mongoose-paginate-v2"
 
 const messagesSchema = new Schema({
    user_id: { 
@@ -21,6 +22,8 @@ const messagesSchema = new Schema({
       default: Date.now(),
    }
 })
+
+messagesSchema.plugin(mongoosePaginate)
 
 const messagesModel = model('Messages', messagesSchema)
 

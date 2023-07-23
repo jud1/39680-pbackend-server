@@ -3,7 +3,7 @@ import express from 'express'
 import connectDB from './config/mongoose.js'
 import { Server } from "socket.io"
 import router from './routes/routes.js'
-import multer from 'multer'
+// import multer from 'multer'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import __dirname from './path.js'
