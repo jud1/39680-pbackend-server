@@ -29,7 +29,7 @@ const loginUser = async (req, res, next) => {
             const userBDD = await findUserByEmail(email)
 
             if (!userBDD || !validatePassword(password, userBDD.password)) {
-               return res.status(401).send("Not valid credentials")
+               return res.status(401).send({message: 'Not valid credentials'})
             }
 
             // User valid, so i create the token
@@ -48,8 +48,7 @@ const loginUser = async (req, res, next) => {
 
             // Set Last connection
             await setLastConnection(userBDD.email)
-
-            return res.status(200).json({ token })
+            return res.status(200).json({token})
 
          }
 
@@ -60,7 +59,7 @@ const loginUser = async (req, res, next) => {
             jwt.verify(token2, process.env.JWT_SECRET, async (error, decodedToken) => {
                if (error) {
                   // Token no valido
-                  return res.status(401).send("Not valid credentials")
+                  return res.status(401).send({message: 'Not valid credentials'})
                } else {
                   // Token valido
                   req.user = user

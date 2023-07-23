@@ -3,7 +3,6 @@ import { createMessage, findMessages } from "../services/messages.services.js"
 const getMessages = async(req, res) => {
    try {
       const messages = await findMessages(req.query)
-      console.log(messages)
       res.status(200).send(messages)
    }
    catch(error) {
@@ -20,7 +19,6 @@ const postMessage = async(req, res) => {
       res.status(200).send(allMessages)
    }
    catch(error) {
-      console.error('Error posting message', error)
       res.status(500).send('Error posting message')
    }
 }
