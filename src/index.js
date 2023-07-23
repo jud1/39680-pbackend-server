@@ -15,15 +15,21 @@ import { addLogger } from './utils/logger.js'
 
 // Define express app
 const app = express()
+
+// Set port
 app.set('port', process.env.PORT || 8000)
 
 // Define middleware for parsing JSON and urlencoded data
 app.use(express.json())
 
+// Static react app on server
+app.use(express.static('dist'))
+
 // Connect to MongoDB from external file
 connectDB()
 
-app.use(cors({ origin: process.env.CORS_ORIGIN.split(',')/* , credentials: true  */}))
+// Define cors open public
+// app.use(cors(credentials: true, origin: process.env.CORS_ORIGIN.split(',')}))
 
 // Define cookie parser
 app.use(cookieParser(process.env.JWT_SECRET, {httpOnly: true, secure: false, signed: true} ))
